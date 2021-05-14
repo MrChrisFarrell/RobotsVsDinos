@@ -15,6 +15,7 @@ class Battlefield:
         self.user = ()
         self.enemy = ()
 
+
     def run_game(self):
         self.display_welcome()
         self.fleet.create_fleet()
@@ -40,13 +41,23 @@ class Battlefield:
             print("\nYou're enemy dinosaurs are:")
             for dino in self.enemy:
                 print(f'Type - {dino.type}, Energy - {dino.energy}, Power - {dino.attack_power},Health - {dino.health}')
+        self.battle(self.user)
 
     def display_welcome(self):
         print("Welcome to Robots vs Dinosaurs!")
 
-    def battle(self, user, enemy):
-        print("Battle")
+    def battle(self, user_team):
+        if user_team == self.herd.dinosaurs:
+            self.dino_turn(user_team)
 
+    def dino_turn(self, user_team):
+        if user_team == self.herd.dinosaurs:
+            print(f"\nYou're attacker is: Type - {self.user[self.user_selector].type}, Energy - {self.user[self.user_selector].energy}, Power - {self.user[self.user_selector].attack_power},Health - {self.user[self.user_selector].health}")
+            print(f'\nPick an enemy to attack!\n')
+            for robo in self.enemy:
+                print(f'Enter "{self.enemy_selector}" - {robo.name}, Energy - {robo.power_level}, Health - {robo.health}, Weapon - {robo.weapon.type} (atk) {robo.weapon.attack_power}')
+                self.enemy_selector += 1
+            self.enemy_selector = int(input("Enter enemy number:"))
 
 
 
