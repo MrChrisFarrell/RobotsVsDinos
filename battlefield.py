@@ -9,6 +9,7 @@ class Battlefield:
         self.turn = 1
         self.user_selector = 0
         self.enemy_selector = 0
+        self.target = 0
         self.fleet = Fleet()
         self.herd = Herd()
         self.user_choice = ""
@@ -108,13 +109,18 @@ class Battlefield:
             self.enemy_attacked = self.enemy[self.enemy_selector]
             print(f"\n{self.user_attacker.type} attacks {self.enemy_attacked.name} for {self.user_attacker.attack_power} damage!")
             self.user_attacker.attack_robot(self.enemy_attacked)
-            self.user_selector += 1
+            if self.user_selector >= (len(self.user) - 1):
+                self.user_selector = 0
+            else:
+                self.user_selector += 1
         else:
-            self.user_selector = random.randint(0, len(self.user) - 1)
+            self.target = random.randint(0, len(self.user) - 1)
             self.enemy_attacker = self.enemy[random.randint(0, len(self.enemy) - 1)]
-            self.user_attacked = self.user[self.user_selector]
+            self.user_attacked = self.user[self.target]
             print(f"\n{self.enemy_attacker.type} attacks {self.user_attacked.name} for {self.enemy_attacker.attack_power} damage!")
             self.enemy_attacker.attack_robot(self.user_attacked)
+            if self.user_selector >= (len(self.user) - 1):
+                self.user_selector = 0
 
     def show_robo_opponent_options(self):
         for robo in self.enemy:
@@ -133,13 +139,18 @@ class Battlefield:
             self.enemy_attacked = self.enemy[self.enemy_selector]
             print(f"\n{self.user_attacker.name} attacks {self.enemy_attacked.type} for {self.user_attacker.weapon.attack_power} damage!")
             self.user_attacker.attack_dinosaur(self.enemy_attacked)
-            self.user_selector += 1
+            if self.user_selector >= (len(self.user) - 1):
+                self.user_selector = 0
+            else:
+                self.user_selector += 1
         else:
-            self.user_selector = random.randint(0, len(self.user) - 1)
+            self.target = random.randint(0, len(self.user) - 1)
             self.enemy_attacker = self.enemy[random.randint(0, len(self.enemy) - 1)]
-            self.user_attacked = self.user[self.user_selector]
+            self.user_attacked = self.user[self.target]
             print(f"\n{self.enemy_attacker.name} attacks {self.user_attacked.type} for {self.enemy_attacker.weapon.attack_power} damage!")
             self.enemy_attacker.attack_dinosaur(self.user_attacked)
+            if self.user_selector >= (len(self.user) - 1):
+                self.user_selector = 0
 
     def show_dino_opponent_options(self):
         for dino in self.enemy:
@@ -148,15 +159,28 @@ class Battlefield:
 
     def display_winners(self):
         if self.user_choice == "dinos":
-            print("The Dinosaurs!")
-            for dino in self.herd.dinosaurs:
-                print(f"Champion {dino.type}!!!")
+            if len(self.user) == 0:
+                print("The Robots!")
+                for robot in self.fleet.robots:
+                    print(f"Champion {robot.name}!!!")
+            else:
+                print("The Dinosaurs!")
+                for dino in self.herd.dinosaurs:
+                    print(f"Champion {dino.type}!!!")
         else:
-            print("The Robots!")
-            for robot in self.fleet.robots:
-                print(f"Champion {robot.name}!!!")
+            if len(self.user) == 0:
+                print("The Dinosaurs!")
+                for dino in self.herd.dinosaurs:
+                    print(f"Champion {dino.type}!!!")
+            else:
+                print("The Robots!")
+                for robot in self.fleet.robots:
+                    print(f"Champion {robot.name}!!!")
 
     def play_again(self):
-        self.try_again = int(input(f'Enter "1" if you want to play again!'))
-        if not self.try_again == 1:
+        self.try_again = input(f'Enter "1" if you want to play again!')
+        if not self.try_again == "1":
             self.try_again = 0
+        else:
+            self.try_again = 1
+

@@ -9,6 +9,10 @@ class Dinosaur:
         self.health = 100
 
     def attack_robot(self, robot):
-        robot.health -= self.attack_power
-        self.energy -= 10
+        if self.energy < 10:
+            print(f"{self.type} is out of energy and can't attack... Quick nap for 50%")
+            self.energy += 50
+        else:
+            robot.health -= self.attack_power
+            self.energy -= 10
 
