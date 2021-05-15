@@ -20,13 +20,12 @@ class Battlefield:
         self.user_attacked = None
         self.try_again = 0
 
-
     def run_game(self):
         self.display_welcome()
         self.fleet.create_fleet()
         self.herd.create_herd()
         self.user_choice = input('Choose "dinos" or "robots"')
-        while not self.user_choice == 'dinos' or self.user_choice == 'robots':
+        while (self.user_choice != 'dinos') and (self.user_choice != 'robots'):
             self.user_choice = input('Incorrect Input: Choose "dinos" or "robots"')
         if self.user_choice == "dinos":
             self.user = self.herd.dinosaurs
@@ -104,6 +103,8 @@ class Battlefield:
             print(f'\nPick an enemy to attack!\n')
             self.show_robo_opponent_options()
             self.enemy_selector = int(input("Enter enemy number:"))
+            while (self.enemy_selector < 0) or (self.enemy_selector > len(self.enemy) - 1):
+                self.enemy_selector = int(input("Incorrect Input: Please select enemy number"))
             self.enemy_attacked = self.enemy[self.enemy_selector]
             print(f"\n{self.user_attacker.type} attacks {self.enemy_attacked.name} for {self.user_attacker.attack_power} damage!")
             self.user_attacker.attack_robot(self.enemy_attacked)
@@ -123,10 +124,12 @@ class Battlefield:
     def robot_turn(self):
         if self.user == self.fleet.robots:
             self.user_attacker = self.user[self.user_selector]
-            print(f"\nYou're attacker is: Name - {self.user_attacker.name}, Energy - {self.user_attacker.power_level}, Health - {self.user_attacker.health}, Weapon - {self.user_attacker.weapon.type} (atk) {self.user_attacker.attack_power}")
+            print(f"\nYou're attacker is: Name - {self.user_attacker.name}, Energy - {self.user_attacker.power_level}, Health - {self.user_attacker.health}, Weapon - {self.user_attacker.weapon.type} (atk) {self.user_attacker.weapon.attack_power}")
             print("\nPick an enemy to attack!\n")
             self.show_dino_opponent_options()
             self.enemy_selector = int(input("Enter enemy number:"))
+            while (self.enemy_selector < 0) or (self.enemy_selector > len(self.enemy) - 1):
+                self.enemy_selector = int(input("Incorrect Input: Please select enemy number"))
             self.enemy_attacked = self.enemy[self.enemy_selector]
             print(f"\n{self.user_attacker.name} attacks {self.enemy_attacked.type} for {self.user_attacker.weapon.attack_power} damage!")
             self.user_attacker.attack_dinosaur(self.enemy_attacked)
@@ -155,3 +158,5 @@ class Battlefield:
 
     def play_again(self):
         self.try_again = int(input(f'Enter "1" if you want to play again!'))
+        if not self.try_again == 1:
+            self.try_again = 0

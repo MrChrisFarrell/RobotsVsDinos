@@ -9,7 +9,7 @@ class Herd:
 
     def create_herd(self):
         while len(self.dinosaurs) < 3:
-            self.dinosaurs.append(Dinosaur(input("Name a type of dinosaur"), random.randint(1, 6)))
+            self.dinosaurs.append(Dinosaur(input("Name a type of dinosaur"), random.randint(10, 30)))
 
 
 
