@@ -13,11 +13,12 @@ class Battlefield:
         self.herd = Herd()
         self.user_choice = ""
         self.user = None
-        self.enemy = ()
-        self.user_attacker = ()
-        self.enemy_attacked = ()
-        self.enemy_attacker = ()
-        self.user_attacked = ()
+        self.enemy = None
+        self.user_attacker = None
+        self.enemy_attacked = None
+        self.enemy_attacker = None
+        self.user_attacked = None
+        self.try_again = 0
 
 
     def run_game(self):
@@ -45,7 +46,7 @@ class Battlefield:
             print("\nYou're enemy dinosaurs are:")
             for dino in self.enemy:
                 print(f'Type - {dino.type}, Energy - {dino.energy}, Power - {dino.attack_power},Health - {dino.health}')
-        self.battle(self.user)
+        self.battle()
 
     def display_welcome(self):
         print("Welcome to Robots vs Dinosaurs!")
@@ -59,11 +60,42 @@ class Battlefield:
                     del self.enemy[self.enemy_selector]
             else:
                 self.robot_turn()
+                if self.enemy_attacked.health < 1:
+                    print(f"{self.enemy_attacked.type} has died!")
+                    del self.enemy[self.enemy_selector]
+        else:
+            if self.user == self.herd.dinosaurs:
+                self.robot_turn()
+                if self.user_attacked.health < 1:
+                    print(f"{self.user_attacked.type} has died!")
+                    del self.user[self.user_selector]
+            else:
+                self.dino_turn()
                 if self.user_attacked.health < 1:
                     print(f"{self.user_attacked.name} has died!")
                     del self.user[self.user_selector]
+        if len(self.user) > 0:
+            if len(self.enemy) > 0:
+                self.enemy_selector = 0
+                self.turn += 1
+                self.battle()
+            else:
+                print(f"You've Won! The winning team is:")
+                self.display_winners()
+                self.play_again()
+                if self.try_again == 1:
+                    self.run_game()
+                else:
+                    print("\n Thanks for playing Robots vs Dinosaurs!!")
         else:
-        self.enemy_selector = 0
+            print("You've Lost... The winning team is:")
+            self.display_winners()
+            self.play_again()
+            if self.try_again == 1:
+                self.run_game()
+            else:
+                print("\n Thanks for playing Robots vs Dinosaurs!!")
+
 
     def dino_turn(self):
         if self.user == self.herd.dinosaurs:
@@ -77,8 +109,8 @@ class Battlefield:
             self.user_attacker.attack_robot(self.enemy_attacked)
             self.user_selector += 1
         else:
-            self.user_selector = random.randint(0, len(self.user))
-            self.enemy_attacker = self.enemy[random.randint(0, len(self.enemy))]
+            self.user_selector = random.randint(0, len(self.user) - 1)
+            self.enemy_attacker = self.enemy[random.randint(0, len(self.enemy) - 1)]
             self.user_attacked = self.user[self.user_selector]
             print(f"\n{self.enemy_attacker.type} attacks {self.user_attacked.name} for {self.enemy_attacker.attack_power} damage!")
             self.enemy_attacker.attack_robot(self.user_attacked)
@@ -100,8 +132,8 @@ class Battlefield:
             self.user_attacker.attack_dinosaur(self.enemy_attacked)
             self.user_selector += 1
         else:
-            self.user_selector = random.randint(0, len(self.user))
-            self.enemy_attacker = self.enemy[random.randint(0, len(self.enemy))]
+            self.user_selector = random.randint(0, len(self.user) - 1)
+            self.enemy_attacker = self.enemy[random.randint(0, len(self.enemy) - 1)]
             self.user_attacked = self.user[self.user_selector]
             print(f"\n{self.enemy_attacker.name} attacks {self.user_attacked.type} for {self.enemy_attacker.weapon.attack_power} damage!")
             self.enemy_attacker.attack_dinosaur(self.user_attacked)
@@ -110,3 +142,16 @@ class Battlefield:
         for dino in self.enemy:
             print(f'Enter "{self.enemy_selector}" - {dino.type}, Energy - {dino.energy}, Health - {dino.health}, Power - {dino.attack_power}')
             self.enemy_selector += 1
+
+    def display_winners(self):
+        if self.user_choice == "dinos":
+            print("The Dinosaurs!")
+            for dino in self.herd.dinosaurs:
+                print(f"Champion {dino.type}!!!")
+        else:
+            print("The Robots!")
+            for robot in self.fleet.robots:
+                print(f"Champion {robot.name}!!!")
+
+    def play_again(self):
+        self.try_again = int(input(f'Enter "1" if you want to play again!'))
